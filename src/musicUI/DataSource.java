@@ -151,6 +151,11 @@ public class DataSource {
             ResultSet results = statement.executeQuery(startQuery.toString())){
             List<Artist> artists = new ArrayList<>();
             while(results.next()){
+                try{
+                    Thread.sleep(20);
+                }catch (InterruptedException e){
+                    e.printStackTrace();
+                }
                 Artist artist = new Artist();
                 artist.setId((results.getInt(INDEX_ARTIST_ID)));
                 artist.setName(results.getString(INDEX_ARTIST_NAME));
