@@ -1,32 +1,41 @@
 package musicUI;
 
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+
 public class Album {
 
-    private int id;
-    private String name;
-    private int artist_id;
+    private SimpleIntegerProperty id;
+    private SimpleStringProperty name;
+    private SimpleIntegerProperty artist_id;
+
+    public Album(){
+        this.id = new SimpleIntegerProperty();
+        this.name = new SimpleStringProperty();
+        this.artist_id = new SimpleIntegerProperty();
+    }
 
     public void setName(String name) {
-        this.name = name;
+        this.name.set(name);
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.id.set(id);
     }
 
     public void setArtist_id(int artist_id) {
-        this.artist_id = artist_id;
+        this.artist_id.set(artist_id);
     }
 
     public String getName() {
-        return name;
+        return name.get();
     }
 
     public int getId() {
-        return id;
+        return id.get();
     }
 
     public int getArtist_id() {
-        return artist_id;
+        return artist_id.get();
     }
 }

@@ -70,6 +70,11 @@ public class DataSource {
     private PreparedStatement queryAlbum;
     /////////////////////////////////////////////////////
 
+    public static final String QUERY_ALBUMS_BY_ARTIST_ID = "SELECT * FROM " + TABLE_ALBUMS + " WHERE " + COLUMNS_ARTIST_ALBUMS
+            + " =? ORDER BY " + COLUMNS_NAME_ALBUMS + " COLLATE NOCASE";
+
+    private PreparedStatement queryAlbumsByArtistID;
+
     private static DataSource dsInstance = new DataSource();
 
     private DataSource(){}
@@ -89,6 +94,7 @@ public class DataSource {
             insertToSongs = connection.prepareStatement(INSERT_SONG);
             queryArtist = connection.prepareStatement(QUERY_ARTIST);
             queryAlbum = connection.prepareStatement(QUERY_ALBUM);
+            queryAlbumsByArtistID = connection.prepareStatement(QUERY_ALBUMS_BY_ARTIST_ID);
             //////////////////////////////////////
             return true;
         }catch(SQLException e){
@@ -116,6 +122,9 @@ public class DataSource {
             }
             if(queryAlbum != null){
                 queryAlbum.close();
+            }
+            if(queryAlbumsByArtistID != null){
+                queryAlbumsByArtistID.close();
             }
             if(connection != null){
                 connection.close();
@@ -188,6 +197,25 @@ public class DataSource {
             }
             return artistToalbum;
         } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<Album> queryAlbumsForArtistID(int artistID){
+        try{
+            queryAlbumsByArtistID.setInt(1, artistID);
+            ResultSet results = queryAlbumsByArtistID.executeQuery();
+            List<Album> albums = new ArrayList<>();
+            while(results.next()){
+                Album album = new Album();
+                album.setId(results.getInt(1));
+                album.setName(results.getString(2));
+                album.setArtist_id(artistID);
+                albums.add(album);
+            }
+            return albums;
+        }catch(SQLException e){
             e.printStackTrace();
             return null;
         }
