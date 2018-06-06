@@ -1,6 +1,5 @@
 package musicUI;
 
-import javax.xml.crypto.Data;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -144,7 +143,7 @@ public class DataSource {
             List<Artist> artists = new ArrayList<>();
             while(results.next()){
                 Artist artist = new Artist();
-                artist.setId(results.getInt(INDEX_ARTIST_ID));
+                artist.setId((results.getInt(INDEX_ARTIST_ID)));
                 artist.setName(results.getString(INDEX_ARTIST_NAME));
                 artists.add(artist);
             }
