@@ -1,5 +1,6 @@
 package musicUI;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -38,6 +39,23 @@ public class Controller {
         };
 
         artistTable.itemsProperty().bind(task.valueProperty());
+        new Thread(task).start();
+    }
+
+    public void updateArtist(){
+        final Artist artist = (Artist) artistTable.getItems().get(2);
+        Task<Boolean> task = new Task<Boolean>() {
+            @Override
+            protected Boolean call() throws Exception {
+                return DataSource.getDsInstance().updateArtistName("AC/DC", artist.getId());
+            }
+        };
+        task.setOnSucceeded(event -> {
+            if (task.valueProperty().get()) {
+                artist.setName("AC/DC");
+                artistTable.refresh();
+            }
+        });
         new Thread(task).start();
     }
 }

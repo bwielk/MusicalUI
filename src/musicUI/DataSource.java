@@ -73,7 +73,11 @@ public class DataSource {
     public static final String QUERY_ALBUMS_BY_ARTIST_ID = "SELECT * FROM " + TABLE_ALBUMS + " WHERE " + COLUMNS_ARTIST_ALBUMS
             + " =? ORDER BY " + COLUMNS_NAME_ALBUMS + " COLLATE NOCASE";
 
+    public static final String UPDATE_ARTIST_NAME = " UPDATE " + TABLE_ARTISTS + " SET " + COLUMNS_ARTIST_NAME + " = ? WHERE " +
+            COLUMNS_ID_ARTIST + " = ?";
+
     private PreparedStatement queryAlbumsByArtistID;
+    private PreparedStatement updateArtistName;
 
     private static DataSource dsInstance = new DataSource();
 
@@ -95,6 +99,7 @@ public class DataSource {
             queryArtist = connection.prepareStatement(QUERY_ARTIST);
             queryAlbum = connection.prepareStatement(QUERY_ALBUM);
             queryAlbumsByArtistID = connection.prepareStatement(QUERY_ALBUMS_BY_ARTIST_ID);
+            updateArtistName = connection.prepareStatement(UPDATE_ARTIST_NAME);
             //////////////////////////////////////
             return true;
         }catch(SQLException e){
@@ -125,6 +130,9 @@ public class DataSource {
             }
             if(queryAlbumsByArtistID != null){
                 queryAlbumsByArtistID.close();
+            }
+            if(updateArtistName != null){
+                updateArtistName.close();
             }
             if(connection != null){
                 connection.close();
@@ -336,6 +344,18 @@ public class DataSource {
             }catch(SQLException e3){
                 e3.printStackTrace();
             }
+        }
+    }
+
+    public boolean updateArtistName(String newName, int artistID){
+        try{
+            updateArtistName.setString(1, newName);
+            updateArtistName.setInt(2, artistID);
+            int affectedRecords = updateArtistName.executeUpdate();
+            return affectedRecords == 1;
+        }catch(SQLException e){
+            e.printStackTrace();
+            return false;
         }
     }
 }
